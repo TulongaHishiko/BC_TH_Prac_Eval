@@ -64,7 +64,7 @@ namespace BC_TH_Prac_Eval.Controllers
         {
             try
             {
-
+                await _clientRepo.Delete(id);
             }
             catch (Exception ex)
             {
