@@ -1,0 +1,126 @@
+﻿@model ClientsVM
+@{
+    ViewData["Title"] = "Clients";
+    
+}
+<div class="row z-depth-2">
+    <h4 class="center-align">Clients</h4>
+    <div class="divider"></div>
+    @if (Model.Clients.Count > 0)
+    {
+        <div class="col s12">
+            <div class="row">
+                <div class="col s12">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Client Code</th>
+                                <th>No. of linked contacts</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <ul class="collapsible popout">
+                        @foreach (ClientModel client in Model.Clients)
+                        {
+                            <li>
+                                <div class="collapsible-header name">
+                                    <div class="left left-align">
+                                        @cat.Name
+                                    </div>
+                                    <div class="collapsible-secondary">
+                                        <a class="secondary-content tooltipped" asp-action="DeleteCategory" asp-controller="Category"
+                                           asp-route-catId="@cat.Id" data-position="top" data-tooltip="Delete Category">
+                                            <i class="material-icons">delete</i>
+                                        </a>
+                                        @*<a id="submitConfirmBtn" href="#confirmationModal"
+                                               onclick="initConfirmModal('Delete', 'Category','@cat.Id')"
+                                               class="tooltipped"
+                                               data-position="top" data-tooltip="Delete Category">
+                                                <i class="material-icons">delete</i>
+                                            </a>*@
+                                    </div>
+
+
+                                </div>
+
+                                <div class="collapsible-body">
+                                    <div class="row">
+                                        <div class="col s12">
+                                            @if (cat.Vendors.Any() && cat.Vendors.Count > 0)
+                                            {
+                                                <ul class="collection">
+                                                    @foreach (VendorVM ven in cat.Vendors)
+                                                    {
+                                                        <li class="collection-item">
+                                                            @ven.VendorName
+                                                            <a class="secondary-content tooltipped" asp-action="RemoveVendor" asp-controller="Category"
+                                                               asp-route-venId="@ven.Id" asp-route-catId="@cat.Id" data-position="top" data-tooltip="Remove Vendor">
+                                                                <i class="material-icons">delete</i>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            }
+                                            else
+                                            {
+                                                <p>
+                                                    No Vendors assigned to this Category
+                                                </p>
+                                            }
+                                        </div>
+
+                                    </div>
+
+
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="center-align">
+                @await Component.InvokeAsync("Pager", new
+                {
+                    model = new PagerViewComponent.PagerViewModel
+                                (prevPageNr, nextPageNr, Search, LinkUrl, LinkArea, nextDisabled, prevDisabled)
+                })
+            </div>
+            <br />
+            <br />
+        </div>
+    }
+    else
+    {
+        <div class="col s12 m12 l12">
+            <div class="card-panel green center-align">
+                <span class="white-text">
+                    No client(s) found.
+                </span>
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="input-field col s12 center-align ">
+        <a asp-action="Index" asp-controller="Home" class="btn waves-effect waves-light btn-large blue lighten-1">
+            <span class="material-icons md-dark md-24">
+                keyboard_return
+            </span>
+            <span class="black-text">Back</span>
+        </a>
+    </div>
+</div>
+
+<div class="fixed-action-btn">
+    <a asp-action="CreateCategory" class="btn-floating btn-large green tooltipped" data-position="left" data-tooltip="Add Client">
+        <i class="large material-icons">add</i>
+    </a>   
+</div>
+
+@section Scripts {
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+}

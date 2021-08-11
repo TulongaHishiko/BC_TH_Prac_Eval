@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31605.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BC_TH_Prac_Eval", "BC_TH_Prac_Eval\BC_TH_Prac_Eval.csproj", "{DA91BBF6-73E2-42F3-9423-E3523BCF76EA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA91BBF6-73E2-42F3-9423-E3523BCF76EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA91BBF6-73E2-42F3-9423-E3523BCF76EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA91BBF6-73E2-42F3-9423-E3523BCF76EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA91BBF6-73E2-42F3-9423-E3523BCF76EA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D993777B-42DA-401D-B1A1-6FE581039EC4}
+	EndGlobalSection
+EndGlobal
