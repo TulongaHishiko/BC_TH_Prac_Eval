@@ -51,7 +51,7 @@ namespace BC_TH_Prac_Eval.Controllers
         {
             try
             {
-
+                //generate client code
             }
             catch(Exception ex)
             {

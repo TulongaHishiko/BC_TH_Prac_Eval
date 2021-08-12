@@ -31,5 +31,46 @@ namespace BC_TH_Prac_Eval.Controllers
             }
             return View(Model);
         }
+        [HttpGet]
+        public async Task<IActionResult> Details([FromQuery] int id)
+        {
+            ContactsVM Model = new ContactsVM();
+            try
+            {
+                var items = await _contactRepo.GetAll();
+                Model.Contacts = items.ToList();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View(Model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Add([FromForm] AddContactModel model)
+        {
+            try
+            {
+                //generate c
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return RedirectToAction("Index");
+        }
+        [HttpPut]
+        public async Task<IActionResult> Delete([FromForm] int id)
+        {
+            try
+            {
+                await _contactRepo.Delete(id);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

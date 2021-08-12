@@ -1,7 +1,7 @@
 ﻿@model ClientsVM
 @{
     ViewData["Title"] = "Clients";
-    
+
 }
 <div class="row z-depth-2">
     <h4 class="center-align">Clients</h4>
@@ -17,78 +17,28 @@
                                 <th>Name</th>
                                 <th>Client Code</th>
                                 <th>No. of linked contacts</th>
+                                <th></th>
                             </tr>
                         </thead>
-                    </table>
-
-                    <ul class="collapsible popout">
-                        @foreach (ClientModel client in Model.Clients)
-                        {
-                            <li>
-                                <div class="collapsible-header name">
-                                    <div class="left left-align">
-                                        @cat.Name
-                                    </div>
-                                    <div class="collapsible-secondary">
-                                        <a class="secondary-content tooltipped" asp-action="DeleteCategory" asp-controller="Category"
-                                           asp-route-catId="@cat.Id" data-position="top" data-tooltip="Delete Category">
+                        <tbody>
+                            @foreach (ClientModel client in Model.Clients)
+                            {
+                                <tr>
+                                    <td>@client.Name</td>
+                                    <td>@client.ClientCode</td>
+                                    <td>@client.LinkedContactsCount</td>
+                                    <td>
+                                        <a class="tooltipped" onclick="DeleteClient(@client.Id)"
+                                           data-position="top" data-tooltip="Delete Client">
                                             <i class="material-icons">delete</i>
                                         </a>
-                                        @*<a id="submitConfirmBtn" href="#confirmationModal"
-                                               onclick="initConfirmModal('Delete', 'Category','@cat.Id')"
-                                               class="tooltipped"
-                                               data-position="top" data-tooltip="Delete Category">
-                                                <i class="material-icons">delete</i>
-                                            </a>*@
-                                    </div>
-
-
-                                </div>
-
-                                <div class="collapsible-body">
-                                    <div class="row">
-                                        <div class="col s12">
-                                            @if (cat.Vendors.Any() && cat.Vendors.Count > 0)
-                                            {
-                                                <ul class="collection">
-                                                    @foreach (VendorVM ven in cat.Vendors)
-                                                    {
-                                                        <li class="collection-item">
-                                                            @ven.VendorName
-                                                            <a class="secondary-content tooltipped" asp-action="RemoveVendor" asp-controller="Category"
-                                                               asp-route-venId="@ven.Id" asp-route-catId="@cat.Id" data-position="top" data-tooltip="Remove Vendor">
-                                                                <i class="material-icons">delete</i>
-                                                            </a>
-                                                        </li>
-                                                    }
-                                                </ul>
-                                            }
-                                            else
-                                            {
-                                                <p>
-                                                    No Vendors assigned to this Category
-                                                </p>
-                                            }
-                                        </div>
-
-                                    </div>
-
-
-                            </li>
-                        }
-                    </ul>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
-            <div class="center-align">
-                @await Component.InvokeAsync("Pager", new
-                {
-                    model = new PagerViewComponent.PagerViewModel
-                                (prevPageNr, nextPageNr, Search, LinkUrl, LinkArea, nextDisabled, prevDisabled)
-                })
-            </div>
-            <br />
-            <br />
         </div>
     }
     else
@@ -114,9 +64,33 @@
 </div>
 
 <div class="fixed-action-btn">
-    <a asp-action="CreateCategory" class="btn-floating btn-large green tooltipped" data-position="left" data-tooltip="Add Client">
+    <a class="btn-floating btn-large green tooltipped modal-trigger" href="#addModal" data-position="left" data-tooltip="Add Client">
         <i class="large material-icons">add</i>
-    </a>   
+    </a>
+</div>
+
+
+<!-- Add Modal -->
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Client</h4>
+        <form>
+            <div class="row">
+                <div class="col s12">
+                    <div class="row">
+                        <div class="input-field col s8 offset-s2">
+                            @Html.LabelFor(model => model.Client.Name)
+                            <input id="contactName" type="text" class="validate center-align" asp-for="@Model.Client.Name" />
+                            <span asp-validation-for="@Model.Client.Name" class="red-text text-darken-2" />
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+        <a id="submitClientBtn" class="waves-effect waves-green btn-flat">Submit</a>
+    </div>
 </div>
 
 @section Scripts {
