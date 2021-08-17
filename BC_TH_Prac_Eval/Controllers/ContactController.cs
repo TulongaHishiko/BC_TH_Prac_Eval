@@ -11,10 +11,10 @@ namespace BC_TH_Prac_Eval.Controllers
 {
     public class ContactController : BaseController
     {
-        private ContactRepository _contactRepo;
-        public ContactController(IConfiguration _configuration, ContactRepository contactRepo) : base(_configuration)
+       
+        public ContactController(IConfiguration _configuration) : base(_configuration)
         {
-            _contactRepo = contactRepo;
+            
         }
 
         public async Task<IActionResult> Index()
@@ -23,7 +23,11 @@ namespace BC_TH_Prac_Eval.Controllers
             try
             {
                 var items = await _contactRepo.GetAll();
-                Model.Contacts = items.ToList();
+                Model.Contacts = items.OrderBy(s => s.Surname).ThenBy(s => s.Name).ToList();
+
+                if (TempData.ContainsKey("Toast"))
+                    toastMessage = TempData["Toast"].ToString();
+                ViewData["Toast"] = toastMessage;
             }
             catch (Exception ex)
             {
@@ -32,13 +36,25 @@ namespace BC_TH_Prac_Eval.Controllers
             return View(Model);
         }
         [HttpGet]
-        public async Task<IActionResult> Details([FromQuery] int id)
+        public async Task<IActionResult> Details(int id)
         {
             ContactsVM Model = new ContactsVM();
             try
             {
-                var items = await _contactRepo.GetAll();
-                Model.Contacts = items.ToList();
+                var item = await _contactRepo.GetSingle(id);
+                Model.Contact = item;
+                var linkedClients = await _contactClientRepo.GetLinkedClients(id);
+                var clients = await _clientRepo.GetAll();
+                List<ClientModel> clientList = new List<ClientModel>();
+                foreach(ContactClientModel link in linkedClients)
+                {
+                    clientList.Add(clients.Where(x => x.Id == link.ClientId).Single());
+                }
+                Model.LinkedClients = clientList;
+
+                if (TempData.ContainsKey("Toast"))
+                    toastMessage = TempData["Toast"].ToString();
+                ViewData["Toast"] = toastMessage;
             }
             catch (Exception ex)
             {
@@ -46,31 +62,60 @@ namespace BC_TH_Prac_Eval.Controllers
             }
             return View(Model);
         }
-        [HttpPost]
-        public async Task<IActionResult> Add([FromForm] AddContactModel model)
+        [HttpGet]
+        public async Task<JsonResult> GetContacts()
         {
+            List<ContactModel> list = new List<ContactModel>();
             try
             {
-                //generate c
+                var items = await _contactRepo.GetAll();
+                list = items.OrderBy(s=>s.Surname).ThenBy(s=>s.Name).ToList();
             }
             catch (Exception ex)
             {
 
             }
-            return RedirectToAction("Index");
+            return Json(list);
         }
-        [HttpPut]
-        public async Task<IActionResult> Delete([FromForm] int id)
+        [HttpPost]
+        public async Task<JsonResult> Add([FromForm] AddContactModel model)
         {
+            bool valid = false;
+            try
+            {
+                if(ModelState.IsValid)
+                {
+                    await _contactRepo.Add(new ContactModel
+                    {
+                        Name = model.Name,
+                        Surname = model.Surname,
+                        Email = model.Email
+                    });
+                    valid = true;
+                    //TempData["Toast"] = "Contact: " + model.Name+" "+model.Surname + " has been successfully been added.";
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                valid = false;
+            }
+            return Json(valid);
+        }
+        [HttpGet]
+        public async Task<JsonResult> Delete(int id)
+        {
+           
             try
             {
                 await _contactRepo.Delete(id);
+                TempData["Toast"] = "The Contact has successfully been deleted.";
             }
             catch (Exception ex)
             {
-
+              
             }
-            return RedirectToAction("Index");
+            return Json(new { redirectToUrl = "/Contact/Index"});
         }
     }
 }

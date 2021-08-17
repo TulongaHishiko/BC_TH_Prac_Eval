@@ -3,12 +3,12 @@
     ViewData["Title"] = "Contacts";
 
 }
-<div class="row z-depth-2">
+<div class="row">
     <h4 class="center-align">Contacts</h4>
     <div class="divider"></div>
     @if (Model.Contacts.Count > 0)
     {
-        <div class="col s12">
+        <div class="col s12" id="tableDiv">
             <div class="row">
                 <div class="col s12">
                     <table class="highlight">
@@ -17,22 +17,26 @@
                                 <th>Name</th>
                                 <th>Surname</th>
                                 <th>Email</th>
-                                <th>No. of linked clients</th>
+                                <th class="center-align">No. of linked clients</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tableInfo">
                             @foreach (ContactModel contact in Model.Contacts)
                             {
-                                <tr>
+                                <tr class='clickable-row' data->
                                     <td>@contact.Name</td>
                                     <td>@contact.Surname</td>
                                     <td>@contact.Email</td>
-                                    <td>@contact.LinkedClientsCount</td>
+                                    <td class="center-align">@contact.LinkedClientsCount</td>
                                     <td>
+                                        <a class="tooltipped" href='Contact/Details?id=@contact.Id'
+                                           data-position="top" data-tooltip="Contact Details">
+                                            <i class="material-icons">info</i>
+                                        </a>
                                         <a class="tooltipped" onclick="DeleteContact(@contact.Id)"
                                            data-position="top" data-tooltip="Delete Contact">
-                                            <i class="material-icons">delete</i>
+                                            <i class="material-icons icon-red">delete</i>
                                         </a>
                                     </td>
                                 </tr>
@@ -45,19 +49,22 @@
     }
     else
     {
-        <div class="col s12 m12 l12">
-            <div class="card-panel green center-align">
+        <div class="col s12 m12 l12" id="noItemDiv">
+            <div class="card-panel grey center-align">
                 <span class="white-text">
                     No contact(s) found.
                 </span>
             </div>
         </div>
     }
+
+
+
 </div>
 <div class="row">
-    <div class="input-field col s12 center-align ">
+    <div class="input-field col s12 center-align">
         <a asp-action="Index" asp-controller="Home" class="btn waves-effect waves-light btn-large blue lighten-1">
-            <span class="material-icons md-dark md-24">
+            <span class="material-icons md-dark md-24 matIcon">
                 keyboard_return
             </span>
             <span class="black-text">Back</span>
@@ -75,28 +82,28 @@
 <!-- Add Modal -->
 <div id="addModal" class="modal">
     <div class="modal-content">
-        <h4>Add Contact</h4>
-        <form>
+        <h4 class="center-align">Add Contact</h4>
+        <form id="addForm">
             <div class="row">
                 <div class="col s12">
                     <div class="row">
                         <div class="input-field col s8 offset-s2">
                             @Html.LabelFor(model => model.Contact.Name)
-                            <input id="contactName" type="text" class="validate center-align" asp-for="@Model.Contact.Name" />
+                            <input id="contactName" type="text" class="validate" asp-for="@Model.Contact.Name" />
                             <span asp-validation-for="@Model.Contact.Name" class="red-text text-darken-2" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s8 offset-s2">
                             @Html.LabelFor(model => model.Contact.Surname)
-                            <input id="contactSurname" type="text" class="validate center-align" asp-for="@Model.Contact.Surname" />
+                            <input id="contactSurname" type="text" class="validate" asp-for="@Model.Contact.Surname" />
                             <span asp-validation-for="@Model.Contact.Surname" class="red-text text-darken-2" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s8 offset-s2">
-                            @Html.LabelFor(model => model.Contact.Email)<br /><br />
-                            <input id="contactEmail" type="email" class="validate center-align" asp-for="@Model.Contact.Email"/>
+                            @Html.LabelFor(model => model.Contact.Email)
+                            <input id="contactEmail" type="email" class="validate" asp-for="@Model.Contact.Email" />
                             <span asp-validation-for="@Model.Contact.Email" class="red-text text-darken-2" />
                         </div>
                     </div>
@@ -104,12 +111,18 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
-        <a id="submitContactBtn" class="waves-effect waves-green btn-flat">Submit</a>
+        <a href="#!" class="modal-close waves-effect red btn-flat">Cancel</a>
+        <a id="submitContactBtn" class="waves-effect green btn-flat">Submit</a>
     </div>
 </div>
+
 @section Scripts {
 
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $(document).ready(function () {
+            //refreshContactPage();
+        });
+    </script>
 
 }

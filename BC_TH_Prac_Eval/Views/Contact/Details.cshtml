@@ -1,8 +1,115 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Contact Details";
 }
+@model ContactsVM
+<div class="section row">
+    <div class="col s12">
+        <h4 class="center-align">Contact Details</h4>
+        <div class="divider"></div>
+        <ul class="tabs">
+            <li class="tab col s6"><a class="active" href="#general">General</a></li>
+            <li class="tab col s6"><a href="#clients">Clients</a></li>
+        </ul>
+    </div>
+    <div id="general" class="s12">
+        <h4>Name: @Model.Contact.Name</h4>
+        <h4>Surname: @Model.Contact.Surname</h4>
+        <h4>Email: @Model.Contact.Email</h4>
+    </div>
+    <div id="clients" class="s12">
+        @if (Model.LinkedClients.Count > 0)
+        {
+            <div class="col s12" id="tableDiv">
+                <div class="row">
+                    <div class="col s12">
+                        <table class="highlight">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>Client Code</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableInfo">
+                                @foreach (ClientModel client in Model.LinkedClients)
+                                {
+                                    <tr>
+                                        <td>@client.Name</td>
+                                        <td>@client.ClientCode</td>
+                                        <td>
+                                            <a class="tooltipped" onclick="unlinkClient(@Model.Contact.Id,@client.Id)"
+                                               data-position="top" data-tooltip="Unlink client from contact">
+                                                <i class="material-icons icon-red">
+                                                    link_off
+                                                </i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        }
+        else
+        {
+            <div class="col s12 m12 l12" id="noItemDiv">
+                <div class="card-panel grey center-align">
+                    <span class="white-text">
+                        No client(s) found.
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+<div class="row">
+    <div class="input-field col s12 center-align ">
+        <a asp-action="Index" asp-controller="Contact" class="btn waves-effect waves-light btn-large blue lighten-1">
+            <span class="material-icons md-dark md-24 matIcon">
+                keyboard_return
+            </span>
+            <span class="black-text">Back</span>
+        </a>
+    </div>
+</div>
+
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large green tooltipped" onclick="loadLinkClientModal(@Model.Contact.Id)" data-position="left" data-tooltip="Link Client to contact">
+        <i class="large material-icons">link</i>
+    </a>
+</div>
+<div id="linkModal" class="modal">
+    <div class="modal-content">
+        <h4 class="center-align">Link Client</h4>
+        <form id="linkForm">
+            <div class="row">
+                <div class="col s12">
+                    <div class="row">
+                        <div class="input-field col s8 offset-s2">
+                            <p>Select Client</p>
+                            <select id="clientSelect" class="active" multiple="multiple">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect red btn-flat">Cancel</a>
+        <a onclick="linkClient(@Model.Contact.Id)" class="waves-effect green btn-flat">Submit</a>
+    </div>
+</div>
+@section Scripts {
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $(document).ready(function () {
+            
+        });
+    </script>
+
+}

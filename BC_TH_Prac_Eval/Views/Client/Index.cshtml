@@ -3,34 +3,38 @@
     ViewData["Title"] = "Clients";
 
 }
-<div class="row z-depth-2">
+<div class="row">
     <h4 class="center-align">Clients</h4>
     <div class="divider"></div>
     @if (Model.Clients.Count > 0)
     {
-        <div class="col s12">
+        <div class="col s12" id="">
             <div class="row">
                 <div class="col s12">
-                    <table>
+                    <table class="highlight" id="tableDiv">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Client Code</th>
-                                <th>No. of linked contacts</th>
+                                <th class="center-align">No. of linked contacts</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tableInfo">
                             @foreach (ClientModel client in Model.Clients)
                             {
                                 <tr>
                                     <td>@client.Name</td>
                                     <td>@client.ClientCode</td>
-                                    <td>@client.LinkedContactsCount</td>
+                                    <td class="center-align">@client.LinkedContactsCount</td>
                                     <td>
+                                        <a class="tooltipped" href='Client/Details?id=@client.Id'
+                                           data-position="top" data-tooltip="Client Details">
+                                            <i class="material-icons">info</i>
+                                        </a>
                                         <a class="tooltipped" onclick="DeleteClient(@client.Id)"
                                            data-position="top" data-tooltip="Delete Client">
-                                            <i class="material-icons">delete</i>
+                                            <i class="material-icons icon-red">delete</i>
                                         </a>
                                     </td>
                                 </tr>
@@ -43,19 +47,23 @@
     }
     else
     {
-        <div class="col s12 m12 l12">
-            <div class="card-panel green center-align">
+        <div class="col s12 m12 l12" id="noItemDiv">
+            <div class="card-panel grey center-align">
                 <span class="white-text">
                     No client(s) found.
                 </span>
             </div>
         </div>
     }
+
+
+
+
 </div>
 <div class="row">
     <div class="input-field col s12 center-align ">
         <a asp-action="Index" asp-controller="Home" class="btn waves-effect waves-light btn-large blue lighten-1">
-            <span class="material-icons md-dark md-24">
+            <span class="material-icons md-dark md-24 matIcon">
                 keyboard_return
             </span>
             <span class="black-text">Back</span>
@@ -73,14 +81,14 @@
 <!-- Add Modal -->
 <div id="addModal" class="modal">
     <div class="modal-content">
-        <h4>Add Client</h4>
-        <form>
+        <h4 class="center-align">Add Client</h4>
+        <form id="addForm">
             <div class="row">
                 <div class="col s12">
                     <div class="row">
                         <div class="input-field col s8 offset-s2">
                             @Html.LabelFor(model => model.Client.Name)
-                            <input id="contactName" type="text" class="validate center-align" asp-for="@Model.Client.Name" />
+                            <input id="clientName" type="text" class="validate" asp-for="@Model.Client.Name" />
                             <span asp-validation-for="@Model.Client.Name" class="red-text text-darken-2" />
                         </div>
                     </div>
@@ -88,13 +96,18 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
-        <a id="submitClientBtn" class="waves-effect waves-green btn-flat">Submit</a>
+        <a href="#!" class="modal-close waves-effect red btn-flat">Cancel</a>
+        <a id="submitClientBtn" class="waves-effect green btn-flat">Submit</a>
     </div>
 </div>
 
 @section Scripts {
 
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $(document).ready(function () {
+            //refreshClientPage();
+        });
+    </script>
 
 }

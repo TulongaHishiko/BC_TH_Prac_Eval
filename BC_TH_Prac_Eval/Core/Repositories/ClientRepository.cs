@@ -21,6 +21,7 @@ namespace BC_TH_Prac_Eval.Core.Repositories
             return new ClientModel
             {
                 Id = Convert.ToInt32(reader["Id"]),
+                Name = reader["Name"].ToString(),
                 ClientCode = reader["ClientCode"].ToString(),
                 LinkedContactsCount = Convert.ToInt32(reader["LinkedContactsCount"])
             };
